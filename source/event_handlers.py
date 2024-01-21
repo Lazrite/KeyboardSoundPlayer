@@ -88,7 +88,7 @@ def on_scroll(x, y, dx, dy):
             threading.Thread(target=logic.play_sound).start()
 
 def add_sound_file():
-    filename = filedialog.askopenfilename(filetypes=[("SE File","*.wav;*.png;*.ogg")])
+    filename = filedialog.askopenfilename(filetypes=[("SE File","*.wav;*.mp3;*.ogg"), ("All Files", "*")])
     if filename:
         logic.sound_files.append(filename)
         ui.file_list_box.insert(tk.END, filename)
@@ -129,13 +129,13 @@ def exit_app(icon, item):
 
 def save_preset():
     filename = filedialog.asksaveasfilename(defaultextension=".json",
-                                            filetypes=[("JSON Files", "*.json")])
+                                            filetypes=[("JSON Files", "*.json"), ("All Files", "*")])
     if filename:
         with open(filename, 'w') as file:
             json.dump(logic.sound_files, file)
 
 def load_preset():
-    filename = filedialog.askopenfilename(filetypes=[("JSON Files", "*.json")])
+    filename = filedialog.askopenfilename(filetypes=[("JSON Files", "*.json"), ("All Files", "*")])
     if filename:
         with open(filename, 'r') as file:
             loaded_files = json.load(file)
@@ -195,7 +195,7 @@ def on_save_keyboard_override_preset():
     }
 
     filename = filedialog.asksaveasfilename(defaultextension=".json",
-                                            filetypes=[("JSON Files", "*.json")])
+                                            filetypes=[("JSON Files", "*.json"), ("All Files", "*")])
     if filename:
         # JSONファイルに書き込み
         with open(filename, 'w') as f:
@@ -204,7 +204,7 @@ def on_save_keyboard_override_preset():
 def on_load_mouse_override_preset():
 # JSONファイルから読み込み
     filename = filedialog.askopenfilename(defaultextension=".json",
-                                            filetypes=[("JSON Files", "*.json")])
+                                            filetypes=[("JSON Files", "*.json"), ("All Files", "*")])
     if filename:
         with open(filename, 'r') as f:
             data = json.load(f)
@@ -245,7 +245,7 @@ def on_save_mouse_override_preset():
     return
 
 def on_load_mouse_override(key):
-    filepath = filedialog.askopenfilename(filetypes=[("SE File","*.wav;*.png;*.ogg")])
+    filepath = filedialog.askopenfilename(filetypes=[("SE File","*.wav;*.mp3;*.ogg"), ("All Files", "*")])
     if filepath and ui.current_select_key != None:
         ui.entry_override_preset_mouse_button[key] = ctk.StringVar()
         ui.entry_override_preset_mouse_button[key].set(filepath)
@@ -276,7 +276,7 @@ def on_reset_mouse_override(key):
     del ui.entry_mouse_overrideflags[key]
 
 def on_load_key_override():
-    filepath = filedialog.askopenfilename(filetypes=[("SE File","*.wav;*.png;*.ogg")])
+    filepath = filedialog.askopenfilename(filetypes=[("SE File","*.wav;*.mp3;*.ogg"), ("All Files", "*")])
     if filepath and ui.current_select_key != None:
         ui.entry_override_key_file[ui.current_select_key] = ctk.StringVar()
         ui.entry_override_key_file[ui.current_select_key].set(filepath)

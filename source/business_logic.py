@@ -62,22 +62,6 @@ def play_sound_override_mouse(key):
     sound.set_volume(volume)
     sound.play()
 
-def save_preset():
-    filename = filedialog.asksaveasfilename(defaultextension=".json",
-                                            filetypes=[("JSON Files", "*.json")])
-    if filename:
-        with open(filename, 'w') as file:
-            json.dump(sound_files, file)
-
-def load_preset():
-    filename = filedialog.askopenfilename(filetypes=[("JSON Files", "*.json")])
-    if filename:
-        with open(filename, 'r') as file:
-            loaded_files = json.load(file)
-            sound_files.clear()
-            sound_files.extend(loaded_files)
-            update_listbox()
-
 def update_listbox():
     ui.file_list_box.delete(0, tk.END)
     for file in sound_files:
