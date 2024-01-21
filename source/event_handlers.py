@@ -88,14 +88,14 @@ def on_scroll(x, y, dx, dy):
             threading.Thread(target=logic.play_sound).start()
 
 def add_sound_file():
-    filename = filedialog.askopenfilename()
+    filename = filedialog.askopenfilename(filetypes=[("SE File","*.wav;*.png;*.ogg")])
     if filename:
         logic.sound_files.append(filename)
-        logic.file_list_box.insert(tk.END, filename)
+        ui.file_list_box.insert(tk.END, filename)
 
 def remove_sound_file():
-    if logic.file_list_box.curselection() >= 0:
-        ui.sound_files.pop(ui.file_list_box.curselection())
+    if ui.file_list_box.curselection() >= 0:
+        logic.sound_files.pop(ui.file_list_box.curselection())
         ui.file_list_box.delete(ui.file_list_box.curselection())
 
 def move_up():
@@ -245,7 +245,7 @@ def on_save_mouse_override_preset():
     return
 
 def on_load_mouse_override(key):
-    filepath = filedialog.askopenfilename()
+    filepath = filedialog.askopenfilename(filetypes=[("SE File","*.wav;*.png;*.ogg")])
     if filepath and ui.current_select_key != None:
         ui.entry_override_preset_mouse_button[key] = ctk.StringVar()
         ui.entry_override_preset_mouse_button[key].set(filepath)
@@ -276,7 +276,7 @@ def on_reset_mouse_override(key):
     del ui.entry_mouse_overrideflags[key]
 
 def on_load_key_override():
-    filepath = filedialog.askopenfilename()
+    filepath = filedialog.askopenfilename(filetypes=[("SE File","*.wav;*.png;*.ogg")])
     if filepath and ui.current_select_key != None:
         ui.entry_override_key_file[ui.current_select_key] = ctk.StringVar()
         ui.entry_override_key_file[ui.current_select_key].set(filepath)
