@@ -12,6 +12,9 @@ from tkinter import filedialog
 import ui_components as ui
 import json
 from pynput import mouse
+import icon as ic
+import base64
+from io import BytesIO
 
 root = None
 
@@ -108,9 +111,12 @@ def move_down():
 
 def create_image():
     # ここでタスクトレイアイコンの画像を作成します
-    image_path = 'KeyBoardSoundPlayer.ico'  # 画像ファイルのパス
-    image = Image.open(image_path)
-    return image
+    # Base64でエンコードされた画像データ
+    encoded_image = ic.icon_data
+
+    # Base64データをバイナリデータにデコードし、PIL Imageに変換
+    icon_image = Image.open(BytesIO(base64.b64decode(encoded_image)))
+    return icon_image
 
 def show_window(icon, item):
     icon.stop()
