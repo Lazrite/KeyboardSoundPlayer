@@ -7,10 +7,7 @@ import business_logic as logic
 from pynput import keyboard
 from pynput import mouse
 import pygame
-import os
-import sys
 import icon
-
 
 def main():
     # メインウィンドウの設定
@@ -40,7 +37,7 @@ def main():
     pygame.mixer.init()
 
     # キーボードリスナー
-    listener = keyboard.Listener(on_press=ev.on_press)
+    listener = keyboard.Listener(on_press=ev.on_press, on_release=ev.on_release)
     listener.start()
 
     # マウスリスナー

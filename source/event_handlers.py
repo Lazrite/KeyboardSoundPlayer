@@ -15,8 +15,12 @@ from pynput import mouse
 import icon as ic
 import base64
 from io import BytesIO
+import time
 
 root = None
+
+pressed_key = []
+
 
 def inithialize(root_param):
     global root
@@ -51,6 +55,19 @@ def show_third_content():
 
 
 def on_press(key):
+    global pressed_key
+    
+    if key in pressed_key and not ui.check_pressed_key.get():
+        return
+
+    if not key in pressed_key and ui.check_pressed_key.get():
+        threading.Thread(target=lambda:on_update_repeatflags(key)).start()
+    
+    if key in pressed_key:
+        return
+
+    pressed_key.append(key)
+
     if(ui.check_loud_key.get()):
         try:
             print('press: {}'.format(key.char))
@@ -65,6 +82,17 @@ def on_press(key):
             else:
                 threading.Thread(target=logic.play_sound).start()
 
+def on_release(key):
+    global pressed_key
+    if(key in pressed_key):
+        pressed_key.remove(key)
+
+def on_update_repeatflags(key):
+    time.sleep(float(logic.repeat_time))
+    global pressed_key
+    if(key in pressed_key):
+        pressed_key.remove(key)
+
 def on_click(x, y, button, pressed):
     if pressed and ui.check_loud_click.get():
         if button == mouse.Button.left:
@@ -77,7 +105,7 @@ def on_click(x, y, button, pressed):
                 threading.Thread(target=lambda:logic.play_sound_override_mouse('rightclick')).start()
             else:
                 threading.Thread(target=logic.play_sound).start()
-        elif button == mouse.Button.middle and 'middleclick' in ui.entry_override_preset_mouse_button:
+        elif button == mouse.Button.middle:
             if 'middleclick' in ui.entry_override_preset_mouse_button:
                 threading.Thread(target=lambda:logic.play_sound_override_mouse('middleclick')).start()
             else:
@@ -305,3 +333,6 @@ def on_change_check_loud_click():
 
 def on_change_check_loud_scroll():
     ui.check_loud_scroll_buffer = ui.check_loud_scroll.get()
+
+def on_change_check_pressed_key():
+    ui.check_pressed_key_buffer = ui.check_pressed_key.get()

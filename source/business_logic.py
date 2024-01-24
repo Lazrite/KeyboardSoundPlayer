@@ -24,8 +24,10 @@ current_sound_index = 0
 last_key_time = time.time()
 mode = "Default"
 volume = 1.0
+repeat_time = 1.0
 
 def play_sound():
+
     global current_sound_index, last_key_time, mode, volume
     if not sound_files:
         return
@@ -86,3 +88,19 @@ def change_mode(new_mode):
 def change_volume(val):
     global volume
     volume = float(val) / 100
+    # round関数で最も近い整数に丸める
+    rounded_number = round(ui.volume_slider.get())
+
+    # int関数で整数に変換する
+    int_number = int(rounded_number)
+    ui.volume_var.configure(text=int_number)
+
+def change_repeat(val):
+    global repeat_time
+    # round関数で小数点以下1桁で丸める
+    rounded_number = round(val, 1)
+    # f文字列を使用してフォーマットし、小数点以下1桁を保持して表示
+    formatted_number = f"{rounded_number:.1f}"
+
+    repeat_time = formatted_number
+    ui.pressed_time_var.configure(text=formatted_number)

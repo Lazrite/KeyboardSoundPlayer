@@ -8,6 +8,14 @@ import event_handlers as ev
 
 # コンテンツフレーム
 content_frame = None
+# 音量スライダー
+volume_slider = None
+# 音量表示ラベル
+volume_var = None
+# 長押し時間スライダー
+pressed_time_slider = None
+# 長押し時間ラベル
+pressed_time_var = None
 # サウンドファイル一覧リストボックス
 file_list_box = None
 # ルートウィンドウ
@@ -52,6 +60,10 @@ check_loud_scroll = None
 check_loud_scroll_buffer = None
 # マウスオーバーライドフラグ
 entry_mouse_overrideflags = {}
+# ボタン長押しを許容するか
+check_pressed_key = None
+# 情報保存バッファ
+check_pressed_key_buffer = None
 
 # 特殊キーを含むキーボードのレイアウト
 key_rows = [
@@ -69,11 +81,13 @@ def inithialize(root_param):
     global check_loud_key_buffer
     global check_loud_click_buffer
     global check_loud_scroll_buffer
+    global check_pressed_key_buffer
 
     root = root_param
     check_loud_key_buffer = 1
     check_loud_click_buffer = 1
     check_loud_scroll_buffer = 1
+    check_pressed_key_buffer = 0
 
 # サイドバー作成
 def create_sidebar():
@@ -129,9 +143,30 @@ def create_main_content():
     volume_label = ctk.CTkLabel(volume_frame, text="音量調整")
     volume_label.pack(pady=5, padx=5)
 
+    global volume_slider
     volume_slider = ctk.CTkSlider(volume_frame, from_=0, to=100, orientation='Vertical', command=logic.change_volume)
     volume_slider.set(100)
     volume_slider.pack()
+
+    global volume_var
+    volume_var = ctk.CTkLabel(volume_frame, text=volume_slider.get())
+    volume_var.pack()
+
+    # 長押し時間指定スライダー用のフレーム
+    pressed_time_frame = ctk.CTkFrame(content_frame)
+    pressed_time_frame.pack(side="left", pady=10, padx=10, fill="y")
+
+    pressed_time_label = ctk.CTkLabel(pressed_time_frame, text="リピート\n時間")
+    pressed_time_label.pack(pady=5, padx=5)
+
+    global pressed_time_slider
+    pressed_time_slider = ctk.CTkSlider(pressed_time_frame, from_=0, to=1, orientation='Vertical', command=logic.change_repeat)
+    pressed_time_slider.set(1.0)
+    pressed_time_slider.pack()
+
+    global pressed_time_var
+    pressed_time_var = ctk.CTkLabel(pressed_time_frame, text=pressed_time_slider.get())
+    pressed_time_var.pack()
 
     # ボタンフレーム
     btn_frame = ctk.CTkFrame(content_frame)
@@ -171,6 +206,11 @@ def create_main_content():
     check_loud_scroll = check_loud_scroll_buffer
     check_loud_scroll = ctk.CTkCheckBox(btn_frame, text="マウススクロールを鳴らす", variable=ctk.IntVar(value=check_loud_scroll), command=ev.on_change_check_loud_scroll)
     check_loud_scroll.grid(row=2, column=1, padx=5, pady=5, sticky='we')
+
+    global check_pressed_key
+    check_pressed_key = check_pressed_key_buffer
+    check_pressed_key = ctk.CTkCheckBox(btn_frame, text="長押しでリピートする", variable=ctk.IntVar(value=check_pressed_key), command=ev.on_change_check_pressed_key)
+    check_pressed_key.grid(row=3, column=1, padx=5, pady=5, sticky='we')
 
     # サウンドファイル一覧CTkListbox
     global file_list_box
